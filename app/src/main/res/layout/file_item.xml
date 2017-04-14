@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:id="@+id/parentLinearLayout"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="16dp"
+        >
+
+       <android.support.design.widget.FloatingActionButton
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+
+           android:src="@drawable/audio"
+           />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="File Number one"
+            android:id="@+id/fileName"
+            android:textSize="16sp"
+            />
+
+        <TextView
+            android:layout_marginTop="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="334.7 Kb"
+            android:textSize="12sp"
+            android:id="@+id/fileSize"
+            android:textColor="@color/colorAccent"
+            />
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
