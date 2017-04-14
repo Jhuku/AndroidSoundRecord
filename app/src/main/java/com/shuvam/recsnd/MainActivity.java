@@ -1,8 +1,10 @@
 package com.shuvam.recsnd;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
@@ -23,15 +25,26 @@ import android.widget.Toast;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,11 +70,15 @@ public class MainActivity extends AppCompatActivity {
     CountDownTimer cdt;
     CountDownTimer cdtInner;
     TextView tvTimeCount;
+    File fileToUpload;
+    int [] states = new int[3];
+    private int k;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        k =0;
         buttonStart = (FloatingActionButton) findViewById(R.id.btnPlay);
         buttonStop = (FloatingActionButton) findViewById(R.id.btnStop);
        // btnShowDetails = (Button) findViewById(R.id.btnShowDetails);
@@ -71,12 +88,16 @@ public class MainActivity extends AppCompatActivity {
 
         timer = findViewById(R.id.timer);
 
-
         tvTimeCount = (TextView)findViewById(R.id.tvTimeCount);
         tvTimeCount.setVisibility(View.INVISIBLE);
         tvTimer = new TextView(this);
         tvTimer.setText("3");
         timer.setVisibility(View.INVISIBLE);
+
+        states[0]=3;
+        states[1]=2;
+        states[2]=1;
+
 
 
         anim = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.timer_anim);
@@ -93,15 +114,19 @@ public class MainActivity extends AppCompatActivity {
 
       //  filesToLoad = new ArrayList<>();
 
-
+        populateRecView();
         recView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
                         // TODO Handle item click
                         Toast.makeText(MainActivity.this, "Item "+position, Toast.LENGTH_SHORT).show();
                         Log.d("The file is:",files[position].getName());
-                        
                         uploadFile(files[position]);
+
+                        Intent i = new Intent(getApplicationContext(),MapsActivity.class);
+                        startActivity(i);
+
+
                         
                     }
                 })
@@ -118,10 +143,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
-
-
-
-       /* buttonStop.setEnabled(false);
+        /* buttonStop.setEnabled(false);
         buttonPlayLastRecordAudio.setEnabled(false);
         buttonStopPlayingRecording.setEnabled(false);*/
 
@@ -131,18 +153,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+
+
                 tvTimeCount.setVisibility(View.VISIBLE);
                 cdt = new CountDownTimer(4000,1000) {
                     @Override
                     public void onTick(long l) {
-                        tvTimeCount.setText("Speak in: "+((l/1000))+"s");
+                        tvTimeCount.setText("Speak in: "+states[k]+"s");
+                        k++;
                         Log.d("Timer:",""+l/1000);
                     }
 
                     @Override
                     public void onFinish() {
 
-                        cdt.cancel();
+
+                        k=0;
+                       tvTimeCount.setText("Speak");
+
                         cdtInner = new CountDownTimer(11000,1000) {
                             @Override
                             public void onTick(long l) {
@@ -168,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
                                 String path = Environment.getExternalStorageDirectory().toString()+"/Hack/";
                                 File directory = new File(path);
                                 files = directory.listFiles();
-                               // Toast.makeText(MainActivity.this, "No of files: "+files.length, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "No of files: "+files.length, Toast.LENGTH_SHORT).show();
                                 filesToLoad = new ArrayList<File>(Arrays.asList(files));
                                 adapter = new MyAdapter(filesToLoad);
                                 recView.setAdapter(adapter);
@@ -215,10 +243,14 @@ public class MainActivity extends AppCompatActivity {
                             requestPermission();
                         }
 
+                            cancel();
                     }
                 }.start();
+
             }
         });
+
+
 
         buttonStop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -270,7 +302,30 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void populateRecView() {
+
+
+        String path = Environment.getExternalStorageDirectory().toString()+"/Hack/";
+        File directory = new File(path);
+        files = directory.listFiles();
+        // Toast.makeText(MainActivity.this, "No of files: "+files.length, Toast.LENGTH_SHORT).show();
+        filesToLoad = new ArrayList<File>(Arrays.asList(files));
+        adapter = new MyAdapter(filesToLoad);
+        recView.setAdapter(adapter);
+    }
+
     private void uploadFile(File file) {
+
+       // fileToUpload = new File();
+        fileToUpload = file;
+
+        Log.d("File to upload",""+fileToUpload.getName());
+
+        new UploadFile().execute();
+
+
+
+
     }
 
     public void MediaRecorderReady(){
@@ -327,5 +382,49 @@ public class MainActivity extends AppCompatActivity {
                 RECORD_AUDIO);
         return result == PackageManager.PERMISSION_GRANTED &&
                 result1 == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private class UploadFile extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+
+            StringBuilder s = new StringBuilder();
+
+            try {
+
+                //final AppDetails globalVariable = (AppDetails)getActivity().getApplicationContext();
+                HttpClient httpClient = new DefaultHttpClient();
+                HttpPost postRequest = new HttpPost(
+                        "http://139.59.62.236:8888/check");
+                //File file = globalVariable.getFilesLocations().get(0);
+             ///   FileBody bin = new FileBody(file);
+                FileBody bin = new FileBody(fileToUpload);
+                MultipartEntity reqEntity = new MultipartEntity(
+                        HttpMultipartMode.BROWSER_COMPATIBLE);
+              //  reqEntity.addPart("token", new StringBody(tokenStr));
+                reqEntity.addPart("voice", bin);
+                postRequest.setEntity(reqEntity);
+                HttpResponse response = httpClient.execute(postRequest);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(
+                        response.getEntity().getContent(), "UTF-8"));
+                String sResponse;
+
+
+                while ((sResponse = reader.readLine()) != null) {
+                    s = s.append(sResponse);
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return s.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String temp) {
+            Toast.makeText(getApplicationContext(), "Upload Successful", Toast.LENGTH_SHORT).show();
+            Log.d("Upload Response",temp);
+        }
     }
 }

@@ -3,11 +3,12 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:id="@+id/parentLinearLayout"
+    android:layout_weight="6"
     android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_margin="16dp"
         >
@@ -15,13 +16,13 @@
        <android.support.design.widget.FloatingActionButton
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
-
            android:src="@drawable/audio"
+           android:layout_margin="4dp"
            />
 
     </LinearLayout>
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_marginTop="16dp"
@@ -44,10 +45,27 @@
             android:id="@+id/fileSize"
             android:textColor="@color/colorAccent"
             />
-
-
-
     </LinearLayout>
+
+   <FrameLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_gravity="center"
+       >
+
+       <ImageView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:background="@drawable/upload"
+           android:layout_gravity="end"
+           android:layout_marginRight="24dp"
+
+           />
+
+
+   </FrameLayout>
+
+
 
 
 </LinearLayout>

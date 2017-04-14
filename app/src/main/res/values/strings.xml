@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">RecSnd</string>
+    <string name="maps_api_key">AIzaSyCtaoeti8LSY1uZocSYdFrtg4OaAIX5Alk</string>
 </resources>

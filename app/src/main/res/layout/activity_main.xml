@@ -83,17 +83,89 @@ sothree:umanoScrollableView="@+id/list">
 
             </FrameLayout>
 
-            <TextView
+
+
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:id="@+id/tvTimeCount"
-                android:layout_marginTop="120dp"
-                android:text="Speak in: 3s"
+                android:orientation="horizontal"
+                android:layout_marginTop="118dp"
                 android:textColor="@color/colorWhite"
-                />
+                >
+
+               <!-- <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/firstWhiteCircle"
+                        android:background="@drawable/white_circle"
+                        />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/firstGreenCircle"
+                        android:background="@drawable/green_circle"
+                        />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginLeft="8dp"
+                    >
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/secondWhiteCircle"
+                        android:background="@drawable/white_circle"
+                        />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/secondGreenCircle"
+                        android:background="@drawable/green_circle"
+                        />
+                </FrameLayout>
+
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/thirdWhiteCircle"
+                        android:background="@drawable/white_circle"
+                        />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/thirdGreenCircle"
+                        android:background="@drawable/green_circle"
+                        />
+                </FrameLayout>-->
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ertertert"
+                    android:id="@+id/tvTimeCount"
+                    android:textColor="@color/colorWhite"
+                    />
+            </LinearLayout>
 
         </FrameLayout>
+
+
 
 
 
@@ -154,6 +226,7 @@ sothree:umanoScrollableView="@+id/list">
             android:textColor="@color/colorAccent"
             android:text="Expand to see sound clips"
             android:gravity="center"
+            android:fontFamily="sans-serif-light"
             android:paddingLeft="10dp"/>
 
     </LinearLayout>
