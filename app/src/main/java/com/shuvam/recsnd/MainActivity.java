@@ -1,5 +1,6 @@
 package com.shuvam.recsnd;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
@@ -20,9 +21,12 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.games.Player;
+import com.google.gson.Gson;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.apache.http.HttpResponse;
@@ -33,7 +37,6 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +47,6 @@ import java.util.Random;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     Random random;
     String RandomAudioFileName = "ABCDEFGHIJKLMNOP";
     TextView tvTimer;
+    ImageView logo;
     public static final int RequestPermissionCode = 1;
    // Button btnShowDetails;
     MediaPlayer mediaPlayer;
@@ -71,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
     CountDownTimer cdtInner;
     TextView tvTimeCount;
     File fileToUpload;
+    String UPDRS;
+    int isParkinson;
     int [] states = new int[3];
     private int k;
 
@@ -85,14 +90,17 @@ public class MainActivity extends AppCompatActivity {
         slidingLayout = (SlidingUpPanelLayout)findViewById(R.id.sliding_layout);
         final LinearLayoutManager linearLayoutManager =
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-
+        logo = (ImageView)findViewById(R.id.logo);
         timer = findViewById(R.id.timer);
 
         tvTimeCount = (TextView)findViewById(R.id.tvTimeCount);
-        tvTimeCount.setVisibility(View.INVISIBLE);
+        //tvTimeCount.setVisibility(View.INVISIBLE);
         tvTimer = new TextView(this);
         tvTimer.setText("3");
         timer.setVisibility(View.INVISIBLE);
+
+        ObjectAnimator fadeIn = ObjectAnimator.ofFloat(logo,"alpha",0,1).setDuration(2000);
+        fadeIn.start();
 
         states[0]=3;
         states[1]=2;
@@ -123,11 +131,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("The file is:",files[position].getName());
                         uploadFile(files[position]);
 
-                        Intent i = new Intent(getApplicationContext(),MapsActivity.class);
-                        startActivity(i);
 
-
-                        
                     }
                 })
         );
@@ -168,7 +172,10 @@ public class MainActivity extends AppCompatActivity {
                     public void onFinish() {
 
 
+
+                        tvTimeCount.setText("Say Aaah: A simpler way to detect \nParkinson's.....");
                         k=0;
+
                        tvTimeCount.setText("Speak");
 
                         cdtInner = new CountDownTimer(11000,1000) {
@@ -414,7 +421,6 @@ public class MainActivity extends AppCompatActivity {
                     s = s.append(sResponse);
                 }
 
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -423,8 +429,33 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String temp) {
-            Toast.makeText(getApplicationContext(), "Upload Successful", Toast.LENGTH_SHORT).show();
-            Log.d("Upload Response",temp);
+            Toast.makeText(getApplicationContext(), "Upload Successful" , Toast.LENGTH_SHORT).show();
+
+            Gson g = new Gson();
+            UploadResponse p = g.fromJson(temp, UploadResponse.class);
+
+            UPDRS = p.getUPDRS();
+            isParkinson = p.getIsParkinsons();
+
+
+
+                Log.d("Upload Response", temp);
+                Log.d("Status: ", p.getStatus());
+
+
+                Intent i = new Intent(getApplicationContext(), ResultActivity.class);
+
+
+                Bundle mBundle = new Bundle();
+                mBundle.putString("UPDRS", UPDRS);
+                mBundle.putInt("isParkinsons", isParkinson);
+                i.putExtras(mBundle);
+
+
+                startActivity(i);
+
+
+
         }
     }
 }

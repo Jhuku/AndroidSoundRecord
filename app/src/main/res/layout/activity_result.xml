@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    >
+
+
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:id="@+id/resultFab"
+        android:transitionName="profile"
+        android:layout_margin="24dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:elevation="12dp"
+        android:layout_margin="24dp"
+        android:id="@+id/resultComment"
+        android:textColor="@color/colorWhite"
+        android:fontFamily="sans-serif-light"
+        android:textAlignment="center"
+        android:text="We predict you may have Parkinson's"
+        android:textSize="32sp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="40dp"
+        android:text="UDRF: 20"
+        android:elevation="12dp"
+        android:textSize="18sp"
+        android:id="@+id/resultScore"
+        android:textStyle="bold"
+        android:textColor="@color/colorWhite"
+        />
+
+    <FrameLayout
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="60dp"
+        android:layout_gravity="center"
+        android:elevation="12dp"
+        >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/arrow"
+        android:elevation="12dp"
+        android:id="@+id/btnNext"
+        />
+
+
+
+    </FrameLayout>
+
+
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressToMap"
+        android:elevation="12dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="32dp"
+
+        />
+
+
+</FrameLayout>

@@ -11,6 +11,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -32,6 +34,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,6 +51,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleApiClient mGoogleApiClient;
     int PLACE_PICKER_REQUEST;
     FloatingActionButton fab;
+    private Double latitude;
+    private Double longitude;
+    ArrayList<Hospital> hospitals = new ArrayList<>();
+    RecyclerView hospitalRecView;
+    MyHospitalAdapter adapter;
+    RecyclerView.LayoutManager lm;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,6 +68,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void setinit() {
 
+
+        lm = new LinearLayoutManager(this);
         mapFragment.getMapAsync(this);
 
         PLACE_PICKER_REQUEST = 1;
@@ -85,22 +97,36 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onResponse(Call<QueryResponse> call, Response<QueryResponse> response) {
 
 
-                     //   Log.d("First Response Lat",""+response.body().getRes().get(0).getGeo().getLoc().getLatitude());
+                        Toast.makeText(MapsActivity.this, "Response Got", Toast.LENGTH_SHORT).show();
 
 
-                        /*for (int i=0;i<5;i++)
+                        for (int i=0;i<response.body().getRes().size();i++)
                         {
 
-                            LatLng latLng=new LatLng(response.body().getRes().get(i).getGeo().getLoc().getLatitude(),response.body().getRes().get(i).getGeo().getLoc().getLongitude());
+                            Hospital h = new Hospital();
+                            h.setName(response.body().getRes().get(i).getName());
+                            h.setVicinity(response.body().getRes().get(i).getVicinity());
+                            hospitals.add(h);
+
+                            latitude = response.body().getRes().get(i).getGeo().getLoc().getLatitude();
+                            longitude = response.body().getRes().get(i).getGeo().getLoc().getLongitude();
+
+                            //latitude = latitude.substring(0,latitude.length()-4);
+                           // longitude = longitude.substring(0,longitude.length()-4);
+
+                            LatLng latLng=new LatLng(latitude,longitude);
+                           // LatLng latLng=new LatLng(12.9165,79.1325);
                             MarkerOptions options = new MarkerOptions().position(latLng);
                             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng,19);
                             googleMap.animateCamera(cameraUpdate);
-                            //options.title(busStops.getValue().get(i).getDescription());
-                            BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.placeholdernew);
+                            options.title(response.body().getRes().get(i).getName());
+                            BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.pinmedium);
                             options.icon(icon);
                             googleMap.addMarker(options);
 
-                        }*/
+                        }
+
+                        updateRcView();
 
 
 
@@ -109,6 +135,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     @Override
                     public void onFailure(Call<QueryResponse> call, Throwable t) {
+
+                        t.printStackTrace();
+                        Log.d("Failed","Failed");
 
                     }
                 });
@@ -133,10 +162,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    private void updateRcView() {
+
+
+        adapter = new MyHospitalAdapter(hospitals);
+        hospitalRecView.setLayoutManager(lm);
+        hospitalRecView.setAdapter(adapter);
+
+    }
+
     private void init() {
 
 
-
+        hospitalRecView = (RecyclerView)findViewById(R.id.recViewHospitals);
         fab = (FloatingActionButton)findViewById(R.id.fabGetHospitals);
 
         mGoogleApiClient = new GoogleApiClient
@@ -171,7 +209,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       //  CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng,19);
         //googleMap.animateCamera(cameraUpdate);
       //  options.title("Title");
-        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.placeholdernew);
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.pinmedium);
       //  options.icon(icon);
       //  googleMap.addMarker(options);
 

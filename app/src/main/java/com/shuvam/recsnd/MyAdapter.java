@@ -5,7 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,16 +52,35 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         private TextView fileName;
         private TextView fileSize;
         private LinearLayout ll;
+        private ProgressBar pg;
+        private ImageView ivBtn;
         public ViewHolder(final View itemView) {
             super(itemView);
             fileName = (TextView)itemView.findViewById(R.id.fileName);
             fileSize = (TextView)itemView.findViewById(R.id.fileSize);
             ll = (LinearLayout)itemView.findViewById(R.id.parentLinearLayout);
+            pg = (ProgressBar)itemView.findViewById(R.id.progressBar);
+            ivBtn = (ImageView)itemView.findViewById(R.id.uploadBtn);
+
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ivBtn.setVisibility(View.INVISIBLE);
+                    pg.setVisibility(View.VISIBLE);
+
+                }
+            });
+
+
         }
 
         @Override
         public void onClick(View view) {
             Log.d("Position:",""+getLayoutPosition());
+
+
+
         }
     }
 }

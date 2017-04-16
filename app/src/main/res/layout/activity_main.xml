@@ -29,10 +29,20 @@ sothree:umanoScrollableView="@+id/list">
             android:layout_gravity="center"
             android:layout_marginBottom="64dp"
             >
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:id="@+id/logo"
+                android:background="@drawable/veryverysmall"
+                android:layout_marginBottom="40dp"
+                />
             <android.support.design.widget.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Record"
+                android:layout_marginTop="48dp"
                 android:layout_gravity="center"
                 android:src="@drawable/play"
                 android:id="@+id/btnPlay"
@@ -42,6 +52,7 @@ sothree:umanoScrollableView="@+id/list">
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btnStop"
+                android:layout_marginTop="48dp"
                 android:layout_gravity="center"
                 android:visibility="invisible"
                 android:src="@drawable/stop"
@@ -53,7 +64,7 @@ sothree:umanoScrollableView="@+id/list">
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="64dp"
+                android:layout_marginTop="116dp"
                 >
 
 
@@ -91,7 +102,7 @@ sothree:umanoScrollableView="@+id/list">
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:orientation="horizontal"
-                android:layout_marginTop="118dp"
+                android:layout_marginTop="168dp"
                 android:textColor="@color/colorWhite"
                 >
 
@@ -157,8 +168,11 @@ sothree:umanoScrollableView="@+id/list">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ertertert"
+                    android:text="Say Aaah: A simpler way to detect \nParkinson's....."
+                    android:textSize="16sp"
+                    android:textAlignment="center"
                     android:id="@+id/tvTimeCount"
+                    android:fontFamily="sans-serif-light"
                     android:textColor="@color/colorWhite"
                     />
             </LinearLayout>
