@@ -1,4 +1,4 @@
-# AndroidSoundRecord
+# P-Scan
 
 ![alt text](https://github.com/Jhuku/AndroidSoundRecord/blob/master/pScanScreenshot.png)
 
